@@ -14,13 +14,6 @@ steps:
     commands:
       - composer install --no-ansi --no-interaction --ignore-platform-reqs
 
-  - name: code styling
-    image: d.xr.to/eater/php7.4rc6
-    commands:
-      - ./vendor/bin/php-cs-fixer fix --dry-run src
-    depends_on:
-      - composer
-
   - name: static analysis
     image: d.xr.to/eater/php7.4rc6
     commands:
