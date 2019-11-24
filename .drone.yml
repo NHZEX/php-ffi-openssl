@@ -5,14 +5,14 @@ type: docker
 
 steps:
   - name: composer
-    image: d.xr.to/eater/php7.4rc6
+    image: composer
     volumes:
       - name: composer
         path: /composer
     environment:
       COMPOSER_HOME: /composer
     commands:
-      - composer install --no-ansi --no-interaction
+      - composer install --no-ansi --no-interaction --ignore-platform-reqs
 
   - name: code styling
     image: d.xr.to/eater/php7.4rc6
@@ -41,4 +41,4 @@ volumes:
       path: /tank/var/composer-cache
 ---
 kind: signature
-hmac: 6efb9d8750e04696b55086860be359b58bbedb51944d7e0234032f1cc3230229
+hmac: 5baffe99886362228e03fb75ed2484033c69440178ed4b4c5d1a150474dffb8b
