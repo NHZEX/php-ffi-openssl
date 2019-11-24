@@ -1,0 +1,44 @@
+---
+name: default
+kind: pipeline
+type: docker
+
+steps:
+  - name: composer
+    image: d.xr.to/eater/php7.4rc6
+    volumes:
+      - name: composer
+        path: /composer
+    environment:
+      COMPOSER_HOME: /composer
+    commands:
+      - composer install --no-ansi --no-interaction
+
+  - name: code styling
+    image: d.xr.to/eater/php7.4rc6
+    commands:
+      - ./vendor/bin/php-cs-fixer fix --dry-run src
+    depends_on:
+      - composer
+
+  - name: static analysis
+    image: d.xr.to/eater/php7.4rc6
+    commands:
+      - ./vendor/bin/phpstan analyse --no-ansi --no-interaction -l max -a vendor/autoload.php src
+    depends_on:
+      - composer
+
+  - name: testing
+    image: d.xr.to/eater/php7.4rc6
+    commands:
+      - ./vendor/bin/phpunit --colors=always
+    depends_on:
+      - composer
+
+volumes:
+  - name: composer
+    host:
+      path: /tank/var/composer-cache
+---
+kind: signature
+hmac: 6efb9d8750e04696b55086860be359b58bbedb51944d7e0234032f1cc3230229

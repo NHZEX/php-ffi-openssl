@@ -1,0 +1,24 @@
+{
+  "name": "cijber/copenssl",
+  "description": "C binding to OpenSSL with FFI",
+  "type": "library",
+  "require": {
+    "ext-FFI": "*",
+    "php": "^7.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Cijber\\": "src/"
+    }
+  },
+  "license": "GPLv3",
+  "authors": [
+    {
+      "name": "eater",
+      "email": "=@eater.me"
+    }
+  ]
+}
