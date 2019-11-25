@@ -196,33 +196,60 @@ class BIO extends CBackedObjectWithOwner
     const FLAG_RWS = self::FLAG_READ | self::FLAG_WRITE | self::FLAG_IO_SPECIAL;
     const FLAG_SHOULD_RETRY = 0x08;
 
-
-    public static function new()
+    /**
+     * Create new memory based BIO
+     *
+     * @return BIO
+     */
+    public static function new(): BIO
     {
         $ffi = OpenSSL::getFFI();
         $bio = $ffi->BIO_new($ffi->BIO_s_mem());
         return new BIO($ffi, $bio);
     }
 
-    public static function buffer(string $data)
+    /**
+     * Create new memory based BIO pre-filled with data
+     *
+     * @param string $data
+     * @return BIO
+     */
+    public static function buffer(string $data): BIO
     {
         $ffi = OpenSSL::getFFI();
         $bio = $ffi->BIO_new_mem_buf($data, strlen($data));
         return new BIO($ffi, $bio);
     }
 
-    public static function open($fileName, $flags)
+    /**
+     * Create new file BIO with given mode
+     *
+     * @param string $fileName which file to open
+     * @param string $mode mode to open file with see fopen(3)
+     * @return BIO
+     * @see fopen
+     */
+    public static function open(string $fileName, string $mode): BIO
     {
         $ffi = OpenSSL::getFFI();
-        $bio = $ffi->BIO_new_file($fileName, $flags);
+        $bio = $ffi->BIO_new_file($fileName, $mode);
         return new BIO($ffi, $bio);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function freeObject()
     {
         $this->ffi->BIO_free($this->cObj);
     }
 
+    /**
+     * Write given data to BIO, returns amount of bytes written
+     *
+     * @param string $data
+     * @return int
+     */
     function write(string $data): int
     {
         $len = $this->ffi->BIO_write($this->cObj, $data, strlen($data));
@@ -241,11 +268,22 @@ class BIO extends CBackedObjectWithOwner
         return $len;
     }
 
+    /**
+     * Get type of BIO, indicating if this is e.g. a file see BIO::TYPE_* constants
+     *
+     * @return int
+     */
     function getType(): int
     {
         return $this->ffi->BIO_method_type($this->cObj);
     }
 
+    /**
+     * Read from BIO
+     *
+     * @param int $chunkSize max amount of bytes to read in this operation
+     * @return string
+     */
     function read(int $chunkSize = 4096): string
     {
         $data = OpenSSL\C\Memory::new($chunkSize);
@@ -265,6 +303,11 @@ class BIO extends CBackedObjectWithOwner
         return $data->string($len);
     }
 
+    /**
+     * Get location in file pointer, this only works with file BIO's
+     *
+     * @return int
+     */
     function tell()
     {
         if (($this->getType() & self::TYPE_FILE) !== self::TYPE_FILE) {
@@ -280,7 +323,10 @@ class BIO extends CBackedObjectWithOwner
         return $pos;
     }
 
-    function reset()
+    /**
+     * Reset position in BIO
+     */
+    function reset(): void
     {
         $res = (int)$this->ctrl(self::CTRL_RESET, 0, null);
 
@@ -295,6 +341,11 @@ class BIO extends CBackedObjectWithOwner
         throw new RuntimeException("Failed to reset BIO");
     }
 
+    /**
+     * Seek in BIO, only works on file BIO's
+     *
+     * @param int $offset
+     */
     function seek(int $offset)
     {
         if (($this->getType() & self::TYPE_FILE) !== self::TYPE_FILE) {
@@ -308,12 +359,25 @@ class BIO extends CBackedObjectWithOwner
         }
     }
 
+    /**
+     * returns true if we're at EOF of this BIO
+     *
+     * @return bool
+     */
     function eof(): bool
     {
         return (int)$this->ctrl(self::CTRL_EOF, 0, null) === 1;
     }
 
-    function ctrl($prop, ?int $larg, $parg)
+    /**
+     * Send control command to BIO
+     *
+     * @param int $prop
+     * @param int $larg
+     * @param mixed $parg
+     * @return mixed
+     */
+    function ctrl(int $prop, int $larg = 0, $parg = null)
     {
         return $this->ffi->BIO_ctrl($this->cObj, $prop, $larg, $parg);
     }
