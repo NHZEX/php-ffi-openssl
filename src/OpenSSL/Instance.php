@@ -52,9 +52,10 @@ class Instance
     public function init()
     {
         $this->load();
-        $this->ffi->ERR_load_crypto_strings();
-        $this->ffi->OPENSSL_add_all_algorithms_conf();
-        $this->ffi->OPENSSL_config(null);
+        $ffi = $this->getFFI();
+        $ffi->ERR_load_crypto_strings();
+        $ffi->OPENSSL_add_all_algorithms_conf();
+        $ffi->OPENSSL_config(null);
     }
 
     public function __destruct()
@@ -70,6 +71,10 @@ class Instance
 
     public function getFFI(): FFI
     {
+        if ($this->ffi === null) {
+            throw new \RuntimeException("Failed to load FFI");
+        }
+
         return $this->ffi;
     }
 }

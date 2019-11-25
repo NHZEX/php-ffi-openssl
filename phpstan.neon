@@ -1,0 +1,6 @@
+parameters:
+    universalObjectCratesClasses:
+        - FFI
+        - FFI\CData
+    ignoreErrors:
+        - '~^Call to an undefined method FFI::~'
