@@ -38,25 +38,43 @@ class PKCS7 extends OpenSSL\C\CBackedObjectWithOwner
         }
     }
 
+    /**
+     * Returns a DER representation of this PKCS7
+     *
+     * @return string
+     */
     public function toDER(): string
     {
+        // Create NULL uint8_t*
         $buf = $this->ffi->new("uint8_t*");
+        // Get pointer from it (ptr being now uint8_t**)
         $ptr = FFI::addr($buf);
+        // Give NULL pointer to OpenSSL and let it fill it up
         $len = $this->ffi->i2d_PKCS7($this->cObj, $ptr);
         if ($len < 0) {
             throw new \RuntimeException("Failed to create DER from PKCS7 object");
         }
 
+        // Read string from pointer
         $val = FFI::string($buf, $len);
+        // Free buffer via CRYPTO_free as OpenSSL malloc'd it
         $this->ffi->CRYPTO_free($buf);
         return $val;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function freeObject()
     {
         $this->ffi->PKCS7_free($this->cObj);
     }
 
+    /**
+     * Create new PKCS7
+     *
+     * @return PKCS7
+     */
     public static function new(): PKCS7
     {
         $ffi = OpenSSL::getFFI();
@@ -64,6 +82,12 @@ class PKCS7 extends OpenSSL\C\CBackedObjectWithOwner
         return new PKCS7($ffi, $cObj);
     }
 
+    /**
+     * Load a PKCS7 object from DER
+     *
+     * @param string $der The string containing the DER
+     * @return PKCS7
+     */
     public static function loadFromDER(string $der): PKCS7
     {
         $ffi = OpenSSL::getFFI();
