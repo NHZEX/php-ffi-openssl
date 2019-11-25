@@ -1,3 +1,5 @@
+void CRYPTO_free(void *addr);
+
 typedef struct crypto_ex_data_st CRYPTO_EX_DATA;
 struct crypto_ex_data_st {
   struct stack_st_void *sk;

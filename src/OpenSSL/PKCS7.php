@@ -36,8 +36,20 @@ class PKCS7 extends OpenSSL\C\CBackedObjectWithOwner
         if (!in_array($type, [PKCS7::NID_DIGEST, self::NID_SIGNED, self::NID_SIGNED_AND_ENVELOPED])) {
             throw new \RuntimeException("Can only verify signed or digested data");
         }
+    }
 
+    public function toDER(): string
+    {
+        $buf = $this->ffi->new("uint8_t*");
+        $ptr = FFI::addr($buf);
+        $len = $this->ffi->i2d_PKCS7($this->cObj, $ptr);
+        if ($len < 0) {
+            throw new \RuntimeException("Failed to create DER from PKCS7 object");
+        }
 
+        $val = FFI::string($buf, $len);
+        $this->ffi->CRYPTO_free($buf);
+        return $val;
     }
 
     public function freeObject()
@@ -54,16 +66,16 @@ class PKCS7 extends OpenSSL\C\CBackedObjectWithOwner
 
     public static function loadFromDER(string $der): PKCS7
     {
-        $pkcs = static::new();
-        $pkcs->loadDER($der);
-        return $pkcs;
-    }
-
-    private function loadDER(string $der)
-    {
+        $ffi = OpenSSL::getFFI();
         $derLen = strlen($der);
         $mem = Memory::buffer($der);
-        $this->ffi->d2i_PKCS7(FFI::addr($this->cObj), $mem->pointer(), $derLen);
+        $res = $ffi->d2i_PKCS7(null, $mem->pointer(), $derLen);
+
+        if ($res === null) {
+            throw new \RuntimeException("Failed loading DER");
+        }
+
         $mem->freed();
+        return new static($ffi, $res);
     }
 }
