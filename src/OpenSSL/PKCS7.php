@@ -30,12 +30,13 @@ class PKCS7 extends OpenSSL\C\CBackedObjectWithOwner
         return $this->ffi->OBJ_obj2nid($this->cObj->type);
     }
 
-    public function verify(string $plain): bool
+    public function toSigned(): PKCS7\Signed
     {
-        $type = $this->getType();
-        if (!in_array($type, [PKCS7::NID_DIGEST, self::NID_SIGNED, self::NID_SIGNED_AND_ENVELOPED])) {
-            throw new \RuntimeException("Can only verify signed or digested data");
+        if ($this->getType() !== self::NID_SIGNED) {
+            throw new \RuntimeException("This PKCS7 isn't of type signed");
         }
+
+        return new PKCS7\Signed($this);
     }
 
     /**
@@ -59,6 +60,7 @@ class PKCS7 extends OpenSSL\C\CBackedObjectWithOwner
         $val = FFI::string($buf, $len);
         // Free buffer via CRYPTO_free as OpenSSL malloc'd it
         $this->ffi->CRYPTO_free($buf);
+
         return $val;
     }
 
