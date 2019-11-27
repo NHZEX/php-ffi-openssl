@@ -205,7 +205,8 @@ class BIO extends CBackedObjectWithOwner
     public static function new(): BIO
     {
         $ffi = OpenSSL::getFFI();
-        $bio = $ffi->BIO_new($ffi->BIO_s_mem());
+        $mem = $ffi->BIO_s_mem();
+        $bio = $ffi->BIO_new($mem);
         return new BIO($ffi, $bio);
     }
 
@@ -253,6 +254,8 @@ class BIO extends CBackedObjectWithOwner
      */
     public function write(string $data): int
     {
+        $this->ensureNotFreed();
+
         $len = $this->ffi->BIO_write($this->cObj, $data, strlen($data));
         if ($len === -2) {
             throw new RuntimeException("Can't wrote to this BIO");
@@ -276,6 +279,8 @@ class BIO extends CBackedObjectWithOwner
      */
     public function getType(): int
     {
+        $this->ensureNotFreed();
+
         return $this->ffi->BIO_method_type($this->cObj);
     }
 
@@ -287,6 +292,8 @@ class BIO extends CBackedObjectWithOwner
      */
     public function read(int $chunkSize = 4096): string
     {
+        $this->ensureNotFreed();
+
         $data = OpenSSL\C\Memory::new($chunkSize);
         $len = $this->ffi->BIO_read($this->cObj, $data->get(), $chunkSize);
         if ($len === -2) {
@@ -311,6 +318,8 @@ class BIO extends CBackedObjectWithOwner
      */
     public function tell()
     {
+        $this->ensureNotFreed();
+
         if (($this->getType() & self::TYPE_FILE) !== self::TYPE_FILE) {
             throw new RuntimeException("Can't tell on non-file BIO");
         }
@@ -329,6 +338,8 @@ class BIO extends CBackedObjectWithOwner
      */
     public function reset(): void
     {
+        $this->ensureNotFreed();
+
         $res = (int)$this->ctrl(self::CTRL_RESET, 0, null);
 
         if (($this->getType() & self::TYPE_FILE) === self::TYPE_FILE && $res === 0) {
@@ -349,6 +360,8 @@ class BIO extends CBackedObjectWithOwner
      */
     public function seek(int $offset)
     {
+        $this->ensureNotFreed();
+
         if (($this->getType() & self::TYPE_FILE) !== self::TYPE_FILE) {
             throw new RuntimeException("Can't seek in non-file BIO");
         }
@@ -367,6 +380,8 @@ class BIO extends CBackedObjectWithOwner
      */
     public function eof(): bool
     {
+        $this->ensureNotFreed();
+
         return (int)$this->ctrl(self::CTRL_EOF, 0, null) === 1;
     }
 
@@ -380,6 +395,8 @@ class BIO extends CBackedObjectWithOwner
      */
     public function ctrl(int $prop, int $larg = 0, $parg = null)
     {
+        $this->ensureNotFreed();
+
         return $this->ffi->BIO_ctrl($this->cObj, $prop, $larg, $parg);
     }
 }

@@ -6,6 +6,7 @@ namespace Cijber\OpenSSL\Tests;
 
 use Cijber\OpenSSL\BIO;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 class BIOTest extends TestCase
 {
@@ -45,5 +46,15 @@ class BIOTest extends TestCase
         $bio->reset();
         $part = $bio->read(3);
         $this->assertEquals("Hel", $part);
+    }
+
+    public function testUsingObjectAfterFree()
+    {
+        $bio = BIO::buffer("Hello world");
+        $this->assertTrue($bio->free());
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("object Cijber\OpenSSL\BIO already freed, can't be used");
+        $bio->getType();
     }
 }

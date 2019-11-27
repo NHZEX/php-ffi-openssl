@@ -7,3 +7,6 @@ void OPENSSL_add_all_algorithms_noconf(void);
 
 void ERR_load_crypto_strings(void);
 void ERR_free_strings(void);
+
+unsigned long ERR_get_error(void);
+char *ERR_error_string(unsigned long e, char *buf);

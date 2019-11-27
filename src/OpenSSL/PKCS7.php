@@ -6,6 +6,7 @@ namespace Cijber\OpenSSL;
 use Cijber\OpenSSL;
 use Cijber\OpenSSL\C\Memory;
 use FFI;
+use RuntimeException;
 
 class PKCS7 extends OpenSSL\C\CBackedObjectWithOwner
 {
@@ -33,8 +34,10 @@ class PKCS7 extends OpenSSL\C\CBackedObjectWithOwner
 
     public function toSigned(): PKCS7\Signed
     {
+        $this->ensureNotFreed();
+
         if ($this->getType() !== self::NID_SIGNED) {
-            throw new \RuntimeException("This PKCS7 isn't of type signed");
+            throw new RuntimeException("This PKCS7 isn't of type signed");
         }
 
         return new PKCS7\Signed($this);
@@ -47,6 +50,8 @@ class PKCS7 extends OpenSSL\C\CBackedObjectWithOwner
      */
     public function toDER(): string
     {
+        $this->ensureNotFreed();
+
         // Create NULL uint8_t*
         $buf = $this->ffi->new("uint8_t*");
         // Get pointer from it (ptr being now uint8_t**)
@@ -54,7 +59,7 @@ class PKCS7 extends OpenSSL\C\CBackedObjectWithOwner
         // Give NULL pointer to OpenSSL and let it fill it up
         $len = $this->ffi->i2d_PKCS7($this->cObj, $ptr);
         if ($len < 0) {
-            throw new \RuntimeException("Failed to create DER from PKCS7 object");
+            throw new RuntimeException("Failed to create DER from PKCS7 object");
         }
 
         // Read string from pointer
@@ -99,10 +104,10 @@ class PKCS7 extends OpenSSL\C\CBackedObjectWithOwner
         $res = $ffi->d2i_PKCS7(null, $mem->pointer(), $derLen);
 
         if ($res === null) {
-            throw new \RuntimeException("Failed loading DER");
+            throw new RuntimeException("Failed loading DER");
         }
 
         $mem->freed();
-        return new static($ffi, $res);
+        return static::cast($ffi, $res);
     }
 }

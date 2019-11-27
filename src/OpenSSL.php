@@ -3,6 +3,7 @@
 
 namespace Cijber;
 
+use Cijber\OpenSSL\FFIWrapper;
 use Cijber\OpenSSL\Instance;
 use FFI;
 
@@ -48,5 +49,21 @@ class OpenSSL
     public static function malloc(int $size): FFI\CData
     {
         return static::getStdLib()->malloc($size);
+    }
+
+    public static function consumeErrors(): array
+    {
+        $ffi = static::getFFI();
+        $errs = [];
+        while (0 !== ($code = $ffi->ERR_get_error())) {
+            $errs[] = FFI::string($ffi->ERR_error_string($code, null));
+        }
+
+        return $errs;
+    }
+
+    public static function addressOf(FFI\CData $data): int
+    {
+        return FFI::cast("long long", $data)->cdata;
     }
 }

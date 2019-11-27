@@ -20,8 +20,8 @@ class PKCS7Test extends TestCase
         $der = file_get_contents(__DIR__ . "/data/pkcs7/1.RSA");
         $pkcs7 = PKCS7::loadFromDER($der);
         $newDer = $pkcs7->toDER();
-        $this->assertEquals($der, $newDer);
         $this->assertEquals(PKCS7::NID_SIGNED, $pkcs7->getType());
+        $this->assertEquals($der, $newDer);
     }
 
     public function testLoadingGarbageDER()

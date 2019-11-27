@@ -24,11 +24,15 @@ class Memory extends CBackedObject
 
     public function get(): CData
     {
+        $this->ensureNotFreed();
+
         return $this->cObj;
     }
 
     public function string(int $length, int $offset = 0)
     {
+        $this->ensureNotFreed();
+
         return substr(FFI::string($this->cObj, $length + $offset), $offset);
     }
 
@@ -42,6 +46,8 @@ class Memory extends CBackedObject
 
     public function pointer(): CData
     {
+        $this->ensureNotFreed();
+
         return FFI::addr($this->cObj);
     }
 }
