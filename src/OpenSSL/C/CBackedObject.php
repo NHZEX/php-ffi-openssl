@@ -94,4 +94,9 @@ class CBackedObject
     {
         $this->managed = true;
     }
+
+    public function getCData(): CData
+    {
+        return $this->cObj;
+    }
 }

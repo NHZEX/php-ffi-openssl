@@ -3,6 +3,7 @@
 
 namespace Cijber\OpenSSL\C;
 
+use Cijber\OpenSSL;
 use Cijber\OpenSSL\FFIWrapper;
 use FFI;
 use FFI\CData;
@@ -43,7 +44,7 @@ class CBackedObjectWithOwner extends CBackedObject
          * Cast first, so it acts like a pointer
          */
         $casted = $ffi->cast(static::TYPE, $cData);
-        $address = FFI::cast("long long", $casted)->cdata;
+        $address = OpenSSL::addressOf($casted);
         if (array_key_exists($address, static::$known)) {
             return static::$known[$address];
         }

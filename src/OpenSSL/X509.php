@@ -5,6 +5,7 @@ namespace Cijber\OpenSSL;
 
 use Cijber\OpenSSL;
 use Cijber\OpenSSL\C\CBackedObjectWithOwner;
+use FFI;
 
 class X509 extends CBackedObjectWithOwner
 {
@@ -20,5 +21,16 @@ class X509 extends CBackedObjectWithOwner
     public function freeObject()
     {
         $this->ffi->X509_free($this->cObj);
+    }
+
+    public function getName()
+    {
+        return FFI::string($this->cObj->name);
+    }
+
+    public function getSHA1Hash()
+    {
+        $hash = FFI::string($this->cObj->sha1_hash, 20);
+        return $hash;
     }
 }

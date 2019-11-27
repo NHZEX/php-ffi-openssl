@@ -66,4 +66,11 @@ class OpenSSL
     {
         return FFI::cast("long long", $data)->cdata;
     }
+
+    static $caStore = null;
+
+    public static function CAStore()
+    {
+        
+    }
 }

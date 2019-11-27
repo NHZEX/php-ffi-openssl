@@ -235,7 +235,13 @@ struct stack_st_X509_CRL {
 };
 
 X509 *X509_new(void);
+X509 *X509_dup(X509 *x509);
 void X509_free(X509 *a);
 
 X509_STORE *X509_STORE_new(void);
 void X509_STORE_free(X509_STORE *v);
+
+X509_LOOKUP_METHOD *X509_LOOKUP_hash_dir(void);
+  X509_LOOKUP_METHOD *X509_LOOKUP_file(void);
+
+  int X509_load_cert_file(X509_LOOKUP *ctx, const char *file, int type);

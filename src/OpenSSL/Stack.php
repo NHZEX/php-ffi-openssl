@@ -8,6 +8,7 @@ use Cijber\OpenSSL;
 use Cijber\OpenSSL\C\CBackedObject;
 use Cijber\OpenSSL\C\CBackedObjectWithOwner;
 use Countable;
+use FFI;
 use FFI\CData;
 use InvalidArgumentException;
 use IteratorAggregate;
@@ -21,8 +22,17 @@ use Traversable;
 abstract class Stack extends CBackedObjectWithOwner implements Countable, ArrayAccess, Traversable, IteratorAggregate
 {
     const CLASSNAME = CBackedObjectWithOwner::class;
+    const TYPE = "struct stack_st*";
 
     abstract protected function spawn(CData $cData);
+
+    protected $owner;
+
+    protected function __construct(FFI $ffi, CData $cObj, $owner = null)
+    {
+        parent::__construct($ffi, $ffi->cast(self::TYPE, $cObj));
+        $this->owner = $owner;
+    }
 
     public static function new()
     {
@@ -99,8 +109,6 @@ abstract class Stack extends CBackedObjectWithOwner implements Countable, ArrayA
         if ($idx === 0) {
             throw new RuntimeException("Failed to insert element");
         }
-
-        $object->pushRefCount();
 
         return $idx;
     }

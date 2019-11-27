@@ -58,11 +58,8 @@ typedef struct pkcs7_signedandenveloped_st {
   ASN1_INTEGER *version;
 
   struct stack_st_X509_ALGOR *md_algs;
-
   struct stack_st_X509 *cert;
-
   struct stack_st_X509_CRL *crl;
-
   struct stack_st_PKCS7_SIGNER_INFO *signer_info;
 
   PKCS7_ENC_CONTENT *enc_data;

@@ -32,7 +32,7 @@ class PKCS7 extends OpenSSL\C\CBackedObjectWithOwner
         return $this->ffi->OBJ_obj2nid($this->cObj->type);
     }
 
-    public function toSigned(): PKCS7\Signed
+    public function asSigned(): PKCS7\Signed
     {
         $this->ensureNotFreed();
 
@@ -40,7 +40,7 @@ class PKCS7 extends OpenSSL\C\CBackedObjectWithOwner
             throw new RuntimeException("This PKCS7 isn't of type signed");
         }
 
-        return new PKCS7\Signed($this);
+        return PKCS7\Signed::fromPKCS7($this, $this->ffi, $this->cObj->d->sign, $this->cObj);
     }
 
     /**
