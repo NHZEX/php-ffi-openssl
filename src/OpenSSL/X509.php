@@ -3,12 +3,13 @@
 
 namespace Cijber\OpenSSL;
 
-
 use Cijber\OpenSSL;
 use Cijber\OpenSSL\C\CBackedObjectWithOwner;
 
 class X509 extends CBackedObjectWithOwner
 {
+    const TYPE = "X509*";
+
     public static function new(): X509
     {
         $ffi = OpenSSL::getFFI();

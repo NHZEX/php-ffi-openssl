@@ -28,10 +28,17 @@ steps:
     depends_on:
       - composer
 
+  - name: testing
+    image: d.xr.to/eater/php7.4rc6
+    commands:
+      - ./vendor/bin/php-cs-fixer fix --dry-run src
+    depends_on:
+      - composer
+
 volumes:
   - name: composer
     host:
       path: /tank/var/composer-cache
 ---
 kind: signature
-hmac: f37f65151151bb234e48025637865312bcf2b099c6550775fdc0a2b5fba73887
+hmac: ad2a518ae2f5db6fe8d8a45078668f02a11e54ae83bb7c5612058c2a880dc1ec

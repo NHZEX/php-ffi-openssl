@@ -3,13 +3,14 @@
 
 namespace Cijber\OpenSSL;
 
-
 use Cijber\OpenSSL;
 use Cijber\OpenSSL\C\Memory;
 use FFI;
 
 class PKCS7 extends OpenSSL\C\CBackedObjectWithOwner
 {
+    const TYPE = "PKCS7*";
+
     /**
      * NID_pkcs7
      */

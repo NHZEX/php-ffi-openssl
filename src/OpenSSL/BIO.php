@@ -3,13 +3,14 @@
 
 namespace Cijber\OpenSSL;
 
-
 use Cijber\OpenSSL;
 use Cijber\OpenSSL\C\CBackedObjectWithOwner;
 use RuntimeException;
 
 class BIO extends CBackedObjectWithOwner
 {
+    const TYPE = "BIO*";
+
     const CTRL_RESET = 1;
     const CTRL_EOF = 2;
     const CTRL_INFO = 3;
@@ -250,7 +251,7 @@ class BIO extends CBackedObjectWithOwner
      * @param string $data
      * @return int
      */
-    function write(string $data): int
+    public function write(string $data): int
     {
         $len = $this->ffi->BIO_write($this->cObj, $data, strlen($data));
         if ($len === -2) {
@@ -273,7 +274,7 @@ class BIO extends CBackedObjectWithOwner
      *
      * @return int
      */
-    function getType(): int
+    public function getType(): int
     {
         return $this->ffi->BIO_method_type($this->cObj);
     }
@@ -284,7 +285,7 @@ class BIO extends CBackedObjectWithOwner
      * @param int $chunkSize max amount of bytes to read in this operation
      * @return string
      */
-    function read(int $chunkSize = 4096): string
+    public function read(int $chunkSize = 4096): string
     {
         $data = OpenSSL\C\Memory::new($chunkSize);
         $len = $this->ffi->BIO_read($this->cObj, $data->get(), $chunkSize);
@@ -308,7 +309,7 @@ class BIO extends CBackedObjectWithOwner
      *
      * @return int
      */
-    function tell()
+    public function tell()
     {
         if (($this->getType() & self::TYPE_FILE) !== self::TYPE_FILE) {
             throw new RuntimeException("Can't tell on non-file BIO");
@@ -326,7 +327,7 @@ class BIO extends CBackedObjectWithOwner
     /**
      * Reset position in BIO
      */
-    function reset(): void
+    public function reset(): void
     {
         $res = (int)$this->ctrl(self::CTRL_RESET, 0, null);
 
@@ -346,7 +347,7 @@ class BIO extends CBackedObjectWithOwner
      *
      * @param int $offset
      */
-    function seek(int $offset)
+    public function seek(int $offset)
     {
         if (($this->getType() & self::TYPE_FILE) !== self::TYPE_FILE) {
             throw new RuntimeException("Can't seek in non-file BIO");
@@ -364,7 +365,7 @@ class BIO extends CBackedObjectWithOwner
      *
      * @return bool
      */
-    function eof(): bool
+    public function eof(): bool
     {
         return (int)$this->ctrl(self::CTRL_EOF, 0, null) === 1;
     }
@@ -377,7 +378,7 @@ class BIO extends CBackedObjectWithOwner
      * @param mixed $parg
      * @return mixed
      */
-    function ctrl(int $prop, int $larg = 0, $parg = null)
+    public function ctrl(int $prop, int $larg = 0, $parg = null)
     {
         return $this->ffi->BIO_ctrl($this->cObj, $prop, $larg, $parg);
     }

@@ -3,7 +3,6 @@
 
 namespace Cijber;
 
-
 use Cijber\OpenSSL\Instance;
 use FFI;
 
@@ -22,7 +21,7 @@ class OpenSSL
      *
      * @return Instance
      */
-    static function getInstance(): Instance
+    public static function getInstance(): Instance
     {
         if (static::$instance === null) {
             static::$instance = new Instance();

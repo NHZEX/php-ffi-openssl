@@ -3,14 +3,13 @@
 
 namespace Cijber\OpenSSL\PKCS7;
 
-
 use Cijber\OpenSSL\PKCS7;
 
 trait Helpers
 {
     protected PKCS7 $pkcs7;
 
-    function toDER(): string
+    public function toDER(): string
     {
         return $this->pkcs7->toDER();
     }

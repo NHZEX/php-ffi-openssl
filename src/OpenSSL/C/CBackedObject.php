@@ -3,12 +3,13 @@
 
 namespace Cijber\OpenSSL\C;
 
-
 use FFI;
 use FFI\CData;
 
 class CBackedObject
 {
+    const TYPE = "void*";
+
     protected CData $cObj;
     protected bool $freed = false;
 
@@ -32,7 +33,7 @@ class CBackedObject
     /**
      * Free backing C object, object is useless after this operation
      */
-    public final function free()
+    final public function free()
     {
         if ($this->freed) {
             return;

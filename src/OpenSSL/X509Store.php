@@ -3,7 +3,6 @@
 
 namespace Cijber\OpenSSL;
 
-
 use Cijber\OpenSSL;
 use Cijber\OpenSSL\C\CBackedObjectWithOwner;
 

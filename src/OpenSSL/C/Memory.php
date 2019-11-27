@@ -3,7 +3,6 @@
 
 namespace Cijber\OpenSSL\C;
 
-
 use Cijber\OpenSSL;
 use FFI;
 use FFI\CData;

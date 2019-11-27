@@ -3,7 +3,6 @@
 
 namespace Cijber\OpenSSL;
 
-
 use FFI;
 
 /**
