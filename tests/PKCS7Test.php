@@ -37,7 +37,8 @@ class PKCS7Test extends TestCase
         $plain = file_get_contents(__DIR__ . "/data/pkcs7/1.SF");
         $pkcs7 = PKCS7::loadFromDER($der);
         $signed = $pkcs7->asSigned();
-        $result = $signed->verify($plain);
+        $result = $signed->verify($plain, PKCS7_NOVERIFY);
+        $this->assertTrue($result);
     }
 
     public function testLoadingGarbageDER()

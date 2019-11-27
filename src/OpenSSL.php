@@ -5,6 +5,7 @@ namespace Cijber;
 
 use Cijber\OpenSSL\FFIWrapper;
 use Cijber\OpenSSL\Instance;
+use Cijber\OpenSSL\X509Store;
 use FFI;
 
 /**
@@ -71,6 +72,10 @@ class OpenSSL
 
     public static function CAStore()
     {
-        
+        if (static::$caStore === null) {
+            static::$caStore = X509Store::default();
+        }
+
+        return static::$caStore;
     }
 }

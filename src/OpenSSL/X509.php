@@ -9,6 +9,8 @@ use FFI;
 
 class X509 extends CBackedObjectWithOwner
 {
+    const FILETYPE_DEFAULT = 3;
+
     const TYPE = "X509*";
 
     public static function new(): X509

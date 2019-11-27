@@ -234,6 +234,42 @@ struct stack_st_X509_CRL {
   _STACK stack;
 };
 
+typedef struct x509_lookup_st X509_LOOKUP;
+
+typedef struct x509_object_st
+ {
+
+ int type;
+ union {
+  char *ptr;
+  X509 *x509;
+  X509_CRL *crl;
+  EVP_PKEY *pkey;
+  } data;
+ } X509_OBJECT;
+
+struct stack_st_X509_LOOKUP { _STACK stack; };
+struct stack_st_X509_OBJECT { _STACK stack; };
+
+typedef struct x509_lookup_method_st {
+  const char *name;
+  int (*new_item)(X509_LOOKUP *ctx);
+  void (*free)(X509_LOOKUP *ctx);
+  int (*init)(X509_LOOKUP *ctx);
+  int (*shutdown)(X509_LOOKUP *ctx);
+  int (*ctrl)(X509_LOOKUP *ctx, int cmd, const char *argc, long argl,
+              char **ret);
+  int (*get_by_subject)(X509_LOOKUP *ctx, int type, X509_NAME *name,
+                        X509_OBJECT *ret);
+  int (*get_by_issuer_serial)(X509_LOOKUP *ctx, int type, X509_NAME *name,
+                              ASN1_INTEGER *serial, X509_OBJECT *ret);
+  int (*get_by_fingerprint)(X509_LOOKUP *ctx, int type,
+                            const unsigned char *bytes, int len,
+                            X509_OBJECT *ret);
+  int (*get_by_alias)(X509_LOOKUP *ctx, int type, const char *str, int len,
+                      X509_OBJECT *ret);
+} X509_LOOKUP_METHOD;
+
 X509 *X509_new(void);
 X509 *X509_dup(X509 *x509);
 void X509_free(X509 *a);
@@ -241,7 +277,13 @@ void X509_free(X509 *a);
 X509_STORE *X509_STORE_new(void);
 void X509_STORE_free(X509_STORE *v);
 
-X509_LOOKUP_METHOD *X509_LOOKUP_hash_dir(void);
-  X509_LOOKUP_METHOD *X509_LOOKUP_file(void);
+X509_LOOKUP *X509_STORE_add_lookup(X509_STORE *v, X509_LOOKUP_METHOD *m);
 
-  int X509_load_cert_file(X509_LOOKUP *ctx, const char *file, int type);
+X509_LOOKUP_METHOD *X509_LOOKUP_hash_dir(void);
+X509_LOOKUP_METHOD *X509_LOOKUP_file(void);
+X509_LOOKUP_METHOD *X509_LOOKUP_mem(void);
+
+int X509_load_cert_file(X509_LOOKUP *ctx, const char *file, int type);
+
+int X509_LOOKUP_ctrl(X509_LOOKUP *ctx, int cmd, const char *argc,
+ long argl, char **ret);

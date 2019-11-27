@@ -5,16 +5,12 @@ namespace Cijber\OpenSSL\PKCS7;
 
 use Cijber\OpenSSL;
 use Cijber\OpenSSL\BIO;
-use Cijber\OpenSSL\PKCS7;
 use Cijber\OpenSSL\Stack\X509Stack;
 use Cijber\OpenSSL\X509Store;
-use FFI;
-use FFI\CData;
 
 class Signed
 {
     use Helpers;
-
 
 
     public function getCerts(): X509Stack
@@ -25,14 +21,14 @@ class Signed
         return $stack;
     }
 
-    public function verify(string $plain, ?X509Store $x509Store = null)
+    public function verify(string $plain, int $flags, ?X509Store $x509Store = null)
     {
         if ($x509Store === null) {
             $x509Store = OpenSSL::CAStore();
         }
 
         $buffer = BIO::buffer($plain);
-        $x = $this->ffi->PKCS7_verify($this->parent, null, null, $buffer->getCData(), null, 0);
+        $x = $this->ffi->PKCS7_verify($this->parent, null, $x509Store->getCData(), $buffer->getCData(), null, $flags);
         return $x === 1;
     }
 }
