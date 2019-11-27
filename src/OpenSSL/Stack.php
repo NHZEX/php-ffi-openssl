@@ -196,9 +196,9 @@ abstract class Stack extends CBackedObjectWithOwner implements Countable, ArrayA
 
     public function __clone()
     {
-        $cObj = $this->ffi->sk_dup($this->cObj);
+        $this->cObj = $this->ffi->sk_dup($this->cObj);
 
-        if ($cObj === null) {
+        if ($this->cObj === null) {
             throw new RuntimeException("Failed to clone stack");
         }
 
@@ -206,7 +206,5 @@ abstract class Stack extends CBackedObjectWithOwner implements Countable, ArrayA
         foreach ($this as $obj) {
             $obj->pushRefCount();
         }
-
-        return new static($this->ffi, $cObj);
     }
 }

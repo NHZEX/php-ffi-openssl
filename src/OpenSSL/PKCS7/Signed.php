@@ -15,7 +15,6 @@ class Signed
 
     public function getCerts(): X509Stack
     {
-
         $stack = X509Stack::from($this->ffi, $this->data->cert, $this);
         $stack->unmanaged();
         return $stack;

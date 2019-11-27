@@ -57,7 +57,8 @@ class OpenSSL
         $ffi = static::getFFI();
         $errs = [];
         while (0 !== ($code = $ffi->ERR_get_error())) {
-            $errs[] = FFI::string($ffi->ERR_error_string($code, null));
+            $ptr = $ffi->ERR_error_string($code, null);
+            $errs[] = FFI::string($ptr);
         }
 
         return $errs;
@@ -68,7 +69,7 @@ class OpenSSL
         return FFI::cast("long long", $data)->cdata;
     }
 
-    static $caStore = null;
+    public static $caStore = null;
 
     public static function CAStore()
     {

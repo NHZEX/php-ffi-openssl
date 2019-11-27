@@ -10,7 +10,7 @@ use FFI\CData;
 
 class CBackedObjectWithOwner extends CBackedObject
 {
-    static private array $known = [];
+    private static array $known = [];
     private int $address = -1;
 
     protected FFI $ffi;
