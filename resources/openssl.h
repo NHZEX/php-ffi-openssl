@@ -8,5 +8,8 @@
 //void ERR_load_crypto_strings(void);
 //void ERR_free_strings(void);
 
+unsigned long OpenSSL_version_num(void);
+const char *OpenSSL_version(int type);
+
 unsigned long ERR_get_error(void);
 char *ERR_error_string(unsigned long e, char *buf);

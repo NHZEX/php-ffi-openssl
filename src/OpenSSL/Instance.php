@@ -4,6 +4,7 @@
 namespace Cijber\OpenSSL;
 
 use FFI;
+use function var_dump;
 
 /**
  * Holds instance of the FFI object
@@ -27,6 +28,8 @@ class Instance
      * @var FFI
      */
     private ?FFI $ffi = null;
+
+    protected string $version;
 
 
     /**
@@ -55,6 +58,8 @@ class Instance
         //$ffi->ERR_load_crypto_strings();
         //$ffi->OPENSSL_add_all_algorithms_conf();
         //$ffi->OPENSSL_config(null);
+
+        $this->version = $ffi->OpenSSL_version(0);
     }
 
     public function __destruct()

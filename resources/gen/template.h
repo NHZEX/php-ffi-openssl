@@ -1,3 +1,4 @@
+#include <openssl/opensslv.h>
 #include <openssl/conf.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>

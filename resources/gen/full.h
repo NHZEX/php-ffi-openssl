@@ -5,6 +5,8 @@
 # 1 "/usr/include/stdc-predef.h" 1 3 4
 # 32 "<command-line>" 2
 # 1 "template.h"
+# 1 "/usr/include/openssl/opensslv.h" 1 3 4
+# 2 "template.h" 2
 # 1 "/usr/include/openssl/conf.h" 1 3 4
 # 13 "/usr/include/openssl/conf.h" 3 4
 # 1 "/usr/include/openssl/bio.h" 1 3 4
@@ -12,9 +14,6 @@
 # 1 "/usr/include/openssl/e_os2.h" 1 3 4
 # 13 "/usr/include/openssl/e_os2.h" 3 4
 # 1 "/usr/include/x86_64-linux-gnu/openssl/opensslconf.h" 1 3 4
-# 13 "/usr/include/x86_64-linux-gnu/openssl/opensslconf.h" 3 4
-# 1 "/usr/include/openssl/opensslv.h" 1 3 4
-# 14 "/usr/include/x86_64-linux-gnu/openssl/opensslconf.h" 2 3 4
 # 14 "/usr/include/openssl/e_os2.h" 2 3 4
 # 243 "/usr/include/openssl/e_os2.h" 3 4
 # 1 "/usr/include/inttypes.h" 1 3 4
@@ -3821,7 +3820,7 @@ int CONF_parse_list(const char *list, int sep, int nospc,
                     void *arg);
 
 void OPENSSL_load_builtin_modules(void);
-# 2 "template.h" 2
+# 3 "template.h" 2
 # 1 "/usr/include/openssl/err.h" 1 3 4
 # 34 "/usr/include/openssl/err.h" 3 4
 # 1 "/usr/include/errno.h" 1 3 4
@@ -3920,7 +3919,7 @@ int ERR_get_next_error_library(void);
 int ERR_set_mark(void);
 int ERR_pop_to_mark(void);
 int ERR_clear_last_mark(void);
-# 3 "template.h" 2
+# 4 "template.h" 2
 # 1 "/usr/include/openssl/evp.h" 1 3 4
 # 13 "/usr/include/openssl/evp.h" 3 4
 # 1 "/usr/include/x86_64-linux-gnu/openssl/opensslconf.h" 1 3 4
@@ -5918,7 +5917,7 @@ void EVP_PKEY_meth_get_digest_custom(EVP_PKEY_METHOD *pmeth,
                                      int (**pdigest_custom) (EVP_PKEY_CTX *ctx,
                                                              EVP_MD_CTX *mctx));
 void EVP_add_alg_module(void);
-# 4 "template.h" 2
+# 5 "template.h" 2
 
 # 1 "/usr/include/openssl/x509.h" 1 3 4
 # 17 "/usr/include/openssl/x509.h" 3 4
@@ -8943,4 +8942,4 @@ void X509_TRUST_cleanup(void);
 int X509_TRUST_get_flags(const X509_TRUST *xp);
 char *X509_TRUST_get0_name(const X509_TRUST *xp);
 int X509_TRUST_get_trust(const X509_TRUST *xp);
-# 6 "template.h" 2
+# 7 "template.h" 2
