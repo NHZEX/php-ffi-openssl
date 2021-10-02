@@ -52,9 +52,9 @@ class Instance
     {
         $this->load();
         $ffi = $this->getFFI();
-        $ffi->ERR_load_crypto_strings();
-        $ffi->OPENSSL_add_all_algorithms_conf();
-        $ffi->OPENSSL_config(null);
+        //$ffi->ERR_load_crypto_strings();
+        //$ffi->OPENSSL_add_all_algorithms_conf();
+        //$ffi->OPENSSL_config(null);
     }
 
     public function __destruct()
@@ -63,9 +63,9 @@ class Instance
             return;
         }
 
-        $this->ffi->EVP_cleanup();
-        $this->ffi->CRYPTO_cleanup_all_ex_data();
-        $this->ffi->ERR_free_strings();
+        //$this->ffi->EVP_cleanup();
+        //$this->ffi->CRYPTO_cleanup_all_ex_data();
+        //$this->ffi->ERR_free_strings();
     }
 
     public function getFFI(): FFI

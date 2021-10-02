@@ -281,7 +281,7 @@ X509_LOOKUP *X509_STORE_add_lookup(X509_STORE *v, X509_LOOKUP_METHOD *m);
 
 X509_LOOKUP_METHOD *X509_LOOKUP_hash_dir(void);
 X509_LOOKUP_METHOD *X509_LOOKUP_file(void);
-X509_LOOKUP_METHOD *X509_LOOKUP_mem(void);
+//X509_LOOKUP_METHOD *X509_LOOKUP_mem(void);
 
 int X509_load_cert_file(X509_LOOKUP *ctx, const char *file, int type);
 

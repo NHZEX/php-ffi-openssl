@@ -1,5 +1,21 @@
 void CRYPTO_free(void *addr);
 
+typedef struct ossl_init_settings_st OPENSSL_INIT_SETTINGS;
+
+void OPENSSL_cleanup(void);
+int OPENSSL_init_crypto(uint64_t opts, const OPENSSL_INIT_SETTINGS *settings);
+int OPENSSL_atexit(void (*handler)(void));
+void OPENSSL_thread_stop(void);
+
+OPENSSL_INIT_SETTINGS *OPENSSL_INIT_new(void);
+int OPENSSL_INIT_set_config_filename(OPENSSL_INIT_SETTINGS *init,
+                                  const char* filename);
+int OPENSSL_INIT_set_config_file_flags(OPENSSL_INIT_SETTINGS *init,
+                                    unsigned long flags);
+int OPENSSL_INIT_set_config_appname(OPENSSL_INIT_SETTINGS *init,
+                                 const char* name);
+void OPENSSL_INIT_free(OPENSSL_INIT_SETTINGS *init);
+
 typedef struct crypto_ex_data_st CRYPTO_EX_DATA;
 struct crypto_ex_data_st {
   struct stack_st_void *sk;
@@ -50,7 +66,7 @@ struct bio_st {
 BIO *BIO_new_file(const char *filename, const char *mode);
 BIO *BIO_new(const BIO_METHOD *type);
 
-int BIO_set(BIO *a, const BIO_METHOD *type);
+//int BIO_set(BIO *a, const BIO_METHOD *type);
 int BIO_free(BIO *a);
 
 int BIO_read(BIO *b, void *buf, int len);

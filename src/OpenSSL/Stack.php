@@ -37,23 +37,23 @@ abstract class Stack extends CBackedObjectWithOwner implements Countable, ArrayA
     public static function new()
     {
         $ffi = OpenSSL::getFFI();
-        $cObj = $ffi->sk_new_null();
+        $cObj = $ffi->OPENSSL_sk_new_null();
         return new static($ffi, $cObj);
     }
 
     protected function freeObject()
     {
-        $this->ffi->sk_free($this->cObj);
+        $this->ffi->OPENSSL_sk_free($this->cObj);
     }
 
     public function count(): int
     {
-        return $this->ffi->sk_num($this->cObj);
+        return $this->ffi->OPENSSL_sk_num($this->cObj);
     }
 
     public function get(int $offset)
     {
-        $res = $this->ffi->sk_value($this->cObj, $offset);
+        $res = $this->ffi->OPENSSL_sk_value($this->cObj, $offset);
 
         if ($res === null) {
             throw new RuntimeException("Failed to retrieve item from stack");
@@ -69,7 +69,7 @@ abstract class Stack extends CBackedObjectWithOwner implements Countable, ArrayA
          */
         /** @var CBackedObjectWithOwner $obj */
         $obj = $this->get($offset);
-        $res = $this->ffi->sk_set($this->cObj, $offset, $object->cObj);
+        $res = $this->ffi->OPENSSL_sk_set($this->cObj, $offset, $object->cObj);
 
         if ($res === null) {
             throw new RuntimeException("Failed to set item on stack");
@@ -80,7 +80,7 @@ abstract class Stack extends CBackedObjectWithOwner implements Countable, ArrayA
 
     public function shift()
     {
-        $cObj = $this->ffi->sk_shift($this->cObj);
+        $cObj = $this->ffi->OPENSSL_sk_shift($this->cObj);
         return $this->handleResult($cObj);
     }
 
@@ -98,14 +98,14 @@ abstract class Stack extends CBackedObjectWithOwner implements Countable, ArrayA
 
     public function pop()
     {
-        $cObj = $this->ffi->sk_pop($this->cObj);
+        $cObj = $this->ffi->OPENSSL_sk_pop($this->cObj);
         return $this->handleResult($cObj);
     }
 
     public function push(CBackedObject $object): int
     {
         $this->ensureCorrect($object);
-        $idx = $this->ffi->sk_push($this->cObj, $object->cObj);
+        $idx = $this->ffi->OPENSSL_sk_push($this->cObj, $object->cObj);
         if ($idx === 0) {
             throw new RuntimeException("Failed to insert element");
         }
@@ -126,7 +126,7 @@ abstract class Stack extends CBackedObjectWithOwner implements Countable, ArrayA
     {
         $this->ensureCorrect($object);
 
-        $idx = $this->ffi->sk_unshift($this->cObj, $object->cObj);
+        $idx = $this->ffi->OPENSSL_sk_unshift($this->cObj, $object->cObj);
         if ($idx === 0) {
             throw new RuntimeException("Failed to insert element");
         }
@@ -138,7 +138,7 @@ abstract class Stack extends CBackedObjectWithOwner implements Countable, ArrayA
 
     public function freeAll()
     {
-        $this->ffi->sk_pop_free($this->cObj, function (CData $cObj) {
+        $this->ffi->OPENSSL_sk_pop_free($this->cObj, function (CData $cObj) {
             /** @var CBackedObject $cObj */
             $cObj = $this->spawn($cObj);
             $cObj->decreaseRefCount();
@@ -175,7 +175,7 @@ abstract class Stack extends CBackedObjectWithOwner implements Countable, ArrayA
 
     public function delete($offset)
     {
-        $obj = $this->ffi->sk_delete($this->cObj, $offset);
+        $obj = $this->ffi->OPENSSL_sk_delete($this->cObj, $offset);
         if ($obj === null) {
             throw new RuntimeException("Failed to delete element $offset from stack");
         }
@@ -196,7 +196,7 @@ abstract class Stack extends CBackedObjectWithOwner implements Countable, ArrayA
 
     public function __clone()
     {
-        $this->cObj = $this->ffi->sk_dup($this->cObj);
+        $this->cObj = $this->ffi->OPENSSL_sk_dup($this->cObj);
 
         if ($this->cObj === null) {
             throw new RuntimeException("Failed to clone stack");

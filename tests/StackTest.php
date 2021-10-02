@@ -77,9 +77,9 @@ class StackTest extends TestCase
         $ffi = OpenSSL::getFFI();
         $x509 = $ffi->X509_new();
         $address = OpenSSL::addressOf($x509);
-        $st = $ffi->sk_new_null();
-        $ffi->sk_push($st, $x509);
-        $second = $ffi->cast("X509*", $ffi->sk_value($st, 0));
+        $st = $ffi->OPENSSL_sk_new_null();
+        $ffi->OPENSSL_sk_push($st, $x509);
+        $second = $ffi->cast("X509*", $ffi->OPENSSL_sk_value($st, 0));
         $secondAddress = OpenSSL::addressOf($second);
         $this->assertEquals($address, $secondAddress);
     }

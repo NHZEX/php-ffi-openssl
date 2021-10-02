@@ -1,4 +1,4 @@
-void EVP_cleanup(void);
+//void EVP_cleanup(void);
 
 typedef struct evp_pkey_asn1_method_st EVP_PKEY_ASN1_METHOD;
 
